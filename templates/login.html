@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+
+</head>
+<body>
+<div class="container">
+
+    <div class="login-section">
+        <div class="logo">
+            <img  class="logo-img" src="/static/images/logo.png" alt="Logo">
+        </div> 
+        <h2>Log in</h2>
+        <h3>Welcome back!</h3>
+        <form action="/login" method="post"> 
+            <input type="text" name="Email" placeholder="Email" required> 
+            <input type="password" name="password" placeholder="Password" required> 
+            <div class="options">
+                    <label class="remember-me">
+                        <input type="checkbox"> Remember Me?
+                    </label>
+                    <a href="#">Forgot password</a>
+                </div>
+
+                <button type="submit">Sign in</button>
+
+                <div class="google-btn">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg">
+                    <span>Sign in with Google</span>
+                </div>
+
+                <p class="signup">
+                    Don’t have an account? <a href="/signup">Sign up</a>
+                </p>
+            </form>
+    </div>
+
+    <!-- RIGHT HERO SLIDER -->
+    <div class="slider-section">
+        <div class="slides">
+            <img src="/static/images/slider1.jpg" class="slide active">
+            <img src="/static/images/slider2.jpg" class="slide">
+            <img src="/static/images/slider3.png" class="slide">
+        </div>
+
+        <div class="dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </div>
+
+</div>
+
+
+  <script src="/static/js/login.js"></script>
+    
+</body>
+</html>
