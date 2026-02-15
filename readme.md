@@ -1,1 +1,91 @@
 # ImaniCredits
+
+# =========================
+# GIT COMPLETE CHEAT SHEET
+# Copy and keep this 👍
+# =========================
+
+# --- SETUP & CONFIG ---
+git config --global user.name "Your Name"        # Set global username
+git config --global user.email "you@example.com" # Set global email
+git config --global --list                       # View all global settings
+
+# --- STARTING A REPO ---
+git init                                         # Initialize new repository
+git clone https://github.com/user/repo.git       # Clone existing repository
+
+# --- CHECK STATUS ---
+git status                                       # Show current repo status
+
+# --- STAGING FILES ---
+git add .                                        # Stage all files
+git add filename                                 # Stage specific file
+
+# --- COMMITTING ---
+git commit -m "Your message"                     # Commit staged files
+git commit --amend -m "New message"              # Edit last commit message
+
+# --- BRANCHING ---
+git branch                                       # List branches
+git branch branch-name                           # Create new branch
+git branch -M main                               # Rename current branch to main
+git checkout branch-name                         # Switch to branch (old)
+git switch branch-name                           # Switch to branch (modern)
+git checkout -b branch-name                      # Create + switch branch (old)
+git switch -c branch-name                        # Create + switch branch (modern)
+
+# --- REMOTES (GitHub connection) ---
+git remote add origin REPO_URL                   # Add remote repository
+git remote -v                                    # View remotes
+git remote remove origin                         # Remove remote
+git remote rename origin upstream                # Rename remote
+
+# --- PUSHING ---
+git push -u origin main                          # First push + set upstream
+git push                                         # Normal push
+git push origin main                             # Push specific branch
+git push --force                                 # Force push (dangerous)
+
+# --- PULLING / UPDATING ---
+git pull                                         # Pull and merge
+git pull origin main                             # Pull specific branch
+git pull --rebase origin main                    # Pull with rebase
+git fetch                                        # Fetch without merging
+
+# --- MERGING ---
+git merge branch-name                            # Merge branch into current
+git pull origin main --allow-unrelated-histories # Merge unrelated histories
+
+# --- VIEW HISTORY ---
+git log                                          # Full commit history
+git log --oneline                                # Compact history
+git log --oneline --graph --all                  # Graph view
+
+# --- UNDO / FIX ---
+git reset filename                               # Unstage file
+git reset --soft HEAD~1                          # Undo last commit (keep files)
+git reset --hard HEAD~1                          # Undo last commit (delete changes)
+git restore filename                             # Restore file to last commit
+
+# --- STASH (temporary save) ---
+git stash                                        # Save uncommitted changes
+git stash pop                                    # Restore stashed changes
+git stash list                                   # List stashes
+
+# --- CLEAN ---
+git clean -fd                                    # Remove untracked files (danger)
+
+# --- TAGS ---
+git tag v1.0                                     # Create tag
+git push origin --tags                           # Push tags
+
+# --- DAILY WORKFLOW ---
+git add .
+git commit -m "message"
+git push
+
+# --- SAFE UPDATE WORKFLOW ---
+git pull --rebase
+git add .
+git commit -m "message"
+git push
