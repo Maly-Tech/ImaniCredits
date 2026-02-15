@@ -87,3 +87,20 @@ git pull --rebase
 git add .
 git commit -m "message"
 git push
+
+1️⃣ Fetch the latest remote data
+git fetch origin
+
+2️⃣ Switch to main
+git switch main
+
+3️⃣ Update your local main
+git pull origin main
+
+4️⃣ Merge the remote branch into main
+
+git merge origin/remote/repo
+
+
+5️⃣ Push updated main
+git push origin main
