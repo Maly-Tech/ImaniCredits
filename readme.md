@@ -1,9 +1,4 @@
-# ImaniCredits
 
-# =========================
-# GIT COMPLETE CHEAT SHEET
-# Copy and keep this 👍
-# =========================
 
 # --- SETUP & CONFIG ---
 git config --global user.name "Your Name"        # Set global username
