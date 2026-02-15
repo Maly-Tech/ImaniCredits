@@ -20,3 +20,18 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.3 });
 
 animated.forEach(el => observer.observe(el));
+
+/* TESTIMONIAL AUTO VERTICAL SLIDER */
+const track = document.querySelector(".testimonial-track");
+const testimonials = document.querySelectorAll(".testimonial");
+
+let index = 0;
+const gap = 26;
+
+function slideTestimonials() {
+  const cardHeight = testimonials[0].offsetHeight + gap;
+  index = (index + 1) % testimonials.length;
+  track.style.transform = `translateY(-${index * cardHeight}px)`;
+}
+
+setInterval(slideTestimonials, 4500);
