@@ -177,6 +177,123 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+/* ABOUT US */
+.about {
+  background: #ffffff;
+  padding: 100px 80px;
+}
+
+.about-container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+/* TEXT */
+.about-text h2 {
+  font-size: 2.6rem;
+  color: #053c2d; /* dark logo green */
+  margin-bottom: 22px;
+}
+
+.about-text p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #374151;
+  margin-bottom: 18px;
+}
+
+/* STATS */
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.stat {
+  background: #f4fff9;
+  border-left: 4px solid #1fdd6e; /* logo green */
+  padding: 28px 24px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.stat h3 {
+  font-size: 2rem;
+  color: #053c2d;
+  margin-bottom: 6px;
+}
+
+.stat span {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+/* WHY CHOOSE US */
+.why-us {
+  padding: 100px 80px;
+  background: linear-gradient(
+    135deg,
+    #053c2d 0%,     /* dark logo green */
+    #1fdd6e 45%,    /* main logo green */
+    #f59c1a 100%    /* logo orange */
+  );
+  color: #ffffff;
+}
+
+.why-us-container {
+  max-width: 1200px;
+  margin: auto;
+  text-align: center;
+}
+
+.why-us h2 {
+  font-size: 2.6rem;
+  margin-bottom: 14px;
+}
+
+.why-subtitle {
+  max-width: 720px;
+  margin: 0 auto 60px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+/* CARDS */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+}
+
+.why-card {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  padding: 36px 28px;
+  border-radius: 18px;
+  text-align: left;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.why-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.why-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.why-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0.95;
+}
 
 /* MOBILE */
 @media (max-width: 900px) {
@@ -198,5 +315,33 @@ body {
 
   .hero-buttons a {
     padding: 12px 28px;
+  }
+
+    .about {
+    padding: 80px 40px;
+  }
+
+  .about-container {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+
+  .about-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .about-text h2 {
+    font-size: 2.1rem;
+  }
+    .why-us {
+    padding: 80px 40px;
+  }
+
+  .why-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .why-us h2 {
+    font-size: 2.1rem;
   }
 }
