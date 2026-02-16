@@ -8,10 +8,40 @@
 </head>
 <body>
 
+<<<<<<< HEAD
 <!-- NAVBAR (RETAINED STYLE) -->
 <nav class="navbar">
     <div class="logo">
         <img src="/static/images/logo.png" alt="Imani Credit">
+=======
+    <div class="login-section">
+        <div class="logo">
+            <img  class="logo-img" src="/static/images/logo.png" alt="Logo">
+        </div> 
+        <h2>Log in</h2>
+        <h3>Welcome back!</h3>
+        <form action="/login" method="post"> 
+            <input type="number" name="national_id" placeholder="National ID" required> 
+            <input type="password" name="password" placeholder="Password" required> 
+            <div class="options">
+                    <label class="remember-me">
+                        <input type="checkbox"> Remember Me?
+                    </label>
+                    <a href="#">Forgot password</a>
+                </div>
+
+                <button type="submit">Sign in</button>
+
+                <div class="google-btn">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg">
+                    <span>Sign in with Google</span>
+                </div>
+
+                <p class="signup">
+                    Don’t have an account? <a href="/signup">Sign up</a>
+                </p>
+            </form>
+>>>>>>> origin/feature/sammy
     </div>
     <ul class="nav-links">
         <li><a href="/">Home</a></li>

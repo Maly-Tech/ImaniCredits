@@ -22,8 +22,23 @@
     <li><a href="#">Contact</a></li>
   </ul>
 
+ {% if 'user_id' not in session %}
 
+  <a href="{{ url_for('signup') }}" class="btn-primary">Sign up</a>
+  <a href="{{ url_for('login') }}" class="btn-nav">Sign In</a>
+
+{% else %}
+
+  <span class="welcome-text">Hi, {{ session['firstname'] }}</span>
+  <a href="{{ url_for('dashboard') }}" class="btn-primary">Dashboard</a>
+  <a href="{{ url_for('logout') }}" class="btn-nav">Logout</a>
+
+{% endif %}
+
+<<<<<<< HEAD
   <a href="/login" class="btn-nav">Sign In</a>
+=======
+>>>>>>> origin/feature/sammy
 </nav>
 
 <section class="hero">
