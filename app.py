@@ -7,7 +7,7 @@ app=Flask(__name__)
 #route for homepage
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('landing.html')
 #route for login page
 @app.route('/login')
 def login():
@@ -17,9 +17,11 @@ def login():
 def signup():
     return render_template('signup.html')
 #landing page after login
+
 @app.route('/dashboard')
 def dashboard():
-    return render_template('landing.html')
+    return render_template('dashboard.html')
+
 
 
 

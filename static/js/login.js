@@ -1,20 +1,30 @@
-const slides = document.querySelectorAll(".slide");
-const dots = document.querySelectorAll(".dot");
-
+const slides = document.querySelectorAll('.slide');
 let index = 0;
 
-function showSlide(i) {
-    slides.forEach(slide => slide.classList.remove("active"));
-    dots.forEach(dot => dot.classList.remove("active"));
-
-    slides[i].classList.add("active");
-    dots[i].classList.add("active");
+function showSlide() {
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[index].classList.add('active');
+    index = (index + 1) % slides.length;
 }
 
-setInterval(() => {
-    index++;
-    if (index >= slides.length) {
-        index = 0;
-    }
-    showSlide(index);
-}, 4000);
+setInterval(showSlide, 4500);
+
+// LOGIN
+document.getElementById("loginForm").addEventListener("submit", async e => {
+    e.preventDefault();
+
+    let formData = new FormData(e.target);
+
+    let res = await fetch("/login", {
+        method: "POST",
+        body: formData
+    });
+
+    let data = await res.json();
+    document.getElementById("msg").innerText = data.message;
+});
+
+// OTP
+document.getElementById("otpBtn").onclick = async () => {
+    alert("OTP sent (API ready)");
+};

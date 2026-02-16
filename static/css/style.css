@@ -346,7 +346,9 @@ body {
 /* RIGHT CONTENT */
 .testimonials-content h2 {
   font-size: 2.6rem;
-  color: #053c2d;
+  -webkit-text-fill-color: transparent;
+    color: transparent;
+    background: linear-gradient(135deg, black, green, orange) text;
   margin-bottom: 32px;
 }
 
