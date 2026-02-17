@@ -200,3 +200,19 @@ body {
     padding: 12px 28px;
   }
 }
+.form-container {
+  max-width: 360px;               /* slightly smaller width */
+  width: 90%;                      /* responsive on small screens */
+  margin: 60px auto;               /* less top margin for balance */
+  padding: 40px 35px;              /* slightly tighter padding */
+  border-radius: 12px;             /* smoother corners */
+  background: #ffffff;             /* clean white background */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08); /* subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* hover animation */
+}
+
+/* Hover effect for subtle interactivity */
+.form-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}

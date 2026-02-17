@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Loan Applications - Imani Credit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">
+    <img src="/static/images/logo.png" alt="Imani Credit Logo">
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/apply-loan">Apply Loan</a></li>
+    <li><a href="/my-applications">My Applications</a></li>
+    <li><a href="#">Faqs</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+
+  {% if session.user_id %}
+    <a href="/dashboard" class="btn-primary">{{ session.firstname }}</a>
+    <a href="/logout" class="btn-nav">Logout</a>
+  {% else %}
+    <a href="/signup" class="btn-primary">Sign up</a>
+    <a href="/login" class="btn-nav">Sign In</a>
+  {% endif %}
+</nav>
+
+<!-- HERO / CONTENT SECTION -->
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content animate">
+    <h1>My Loan Applications</h1>
+    <p>Review your submitted loan requests and their status.</p>
+
+    {% if applications %}
+    <table class="applications-table">
+      <thead>
+        <tr>
+          <th>Date Submitted</th>
+          <th>Loan Amount</th>
+          <th>Income</th>
+          <th>Debt</th>
+          <th>Credit Score</th>
+          <th>Employment Years</th>
+          <th>Risk Score</th>
+          <th>Recommendation</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for app in applications %}
+        <tr>
+          <td>{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+          <td>{{ app.loan_amount }}</td>
+          <td>{{ app.income }}</td>
+          <td>{{ app.debt }}</td>
+          <td>{{ app.credit_score }}</td>
+          <td>{{ app.employment_years }}</td>
+          <td>{{ app.risk_score or 'N/A' }}</td>
+          <td>{{ app.recommendation or 'Pending' }}</td>
+          <td>{{ app.status.capitalize() }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p>You have not submitted any loan applications yet.</p>
+      <a href="/apply-loan" class="btn-primary">Apply for a Loan</a>
+    {% endif %}
+  </div>
+</section>
+
+<script src="/static/js/script.js"></script>
+</body>
+</html>
