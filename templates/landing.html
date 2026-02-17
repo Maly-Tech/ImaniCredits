@@ -30,7 +30,6 @@
 {% else %}
 
   <span class="welcome-text">Hi, {{ session['firstname'] }}</span>
-  <a href="{{ url_for('dashboard') }}" class="btn-primary">Dashboard</a>
   <a href="{{ url_for('logout') }}" class="btn-nav">Logout</a>
 
 {% endif %}
