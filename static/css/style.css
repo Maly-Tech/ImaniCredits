@@ -462,49 +462,20 @@ body {
   .hero-buttons a {
     padding: 12px 28px;
   }
+}
+.form-container {
+  max-width: 360px;               /* slightly smaller width */
+  width: 90%;                      /* responsive on small screens */
+  margin: 60px auto;               /* less top margin for balance */
+  padding: 40px 35px;              /* slightly tighter padding */
+  border-radius: 12px;             /* smoother corners */
+  background: #ffffff;             /* clean white background */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08); /* subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* hover animation */
+}
 
-    .about {
-    padding: 80px 40px;
-  }
-
-  .about-container {
-    grid-template-columns: 1fr;
-    gap: 50px;
-  }
-
-  .about-stats {
-    grid-template-columns: 1fr;
-  }
-
-  .about-text h2 {
-    font-size: 2.1rem;
-  }
-    .why-us {
-    padding: 80px 40px;
-  }
-
-  .why-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .why-us h2 {
-    font-size: 2.1rem;
-  }
-
-    .testimonials {
-    padding: 80px 40px;
-  }
-
-  .testimonials-container {
-    grid-template-columns: 1fr;
-    gap: 50px;
-  }
-
-  .testimonials-image {
-    height: 300px;
-  }
-
-  .testimonials-content h2 {
-    font-size: 2.1rem;
-  }
+/* Hover effect for subtle interactivity */
+.form-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
