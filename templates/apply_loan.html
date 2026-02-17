@@ -25,7 +25,18 @@
     </ul>
 
 
-    <a href="/login" class="btn-nav">Sign In</a>
+    {% if 'user_id' not in session %}
+
+  <a href="{{ url_for('signup') }}" class="btn-primary">Sign up</a>
+  <a href="{{ url_for('login') }}" class="btn-nav">Sign In</a>
+
+{% else %}
+
+  <span class="welcome-text">Hi, {{ session['firstname'] }}</span>
+  <a href="{{ url_for('logout') }}" class="btn-nav">Logout</a>
+
+{% endif %}
+
     </nav>
 
     <!-- Main Container -->
@@ -68,6 +79,7 @@
 
             <!-- Main Content -->
             <div class="main-content">
+             <form id="loanForm" method="POST" action="/apply-loan">
                 <!-- Step 1: KYC Verification -->
                 <div class="form-section active" data-step="1">
                     <div class="header">
@@ -78,7 +90,7 @@
                         <div class="form-grid single">
                             <div class="form-group">
                                 <label class="form-label">ID Type</label>
-                                <select class="form-select" data-field="idType" required>
+                                <select class="form-select" name="idType" data-field="idType" required>
                                     <option value="">Select ID Type</option>
                                     <option>Passport</option>
                                     <option>Driver's License</option>
@@ -89,17 +101,17 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">ID Number</label>
-                                <input type="text" class="form-input" placeholder="Enter your ID number" data-field="idNumber" required>
+                                <input type="text" class="form-input" name="idNumber" placeholder="Enter your ID number" data-field="idNumber" required>
                                 <div class="error-message">ID number is required</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Phone Number</label>
-                                <input type="tel" class="form-input" id="phoneNumber" placeholder="+254 7XX XXX XXX" data-field="phoneNumber">
+                                <input type="tel" class="form-input" name="phoneNumber" id="phoneNumber" placeholder="+254 7XX XXX XXX" data-field="phoneNumber">
                                 <div class="error-message">Enter a valid Kenya phone number (07XX, 01XX, or +254)</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Date of Birth</label>
-                                <input type="date" class="form-input" data-field="dateOfBirth" required>
+                                <input type="date" class="form-input" name="dateOfBirth" data-field="dateOfBirth" required>
                                 <div class="error-message">Date of birth is required</div>
                             </div>
                         </div>
@@ -116,22 +128,22 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label class="form-label">First Name</label>
-                                <input type="text" class="form-input" placeholder="John" data-field="firstName" required>
+                                <input type="text" class="form-input" name="firstName" placeholder="John" data-field="firstName" required>
                                 <div class="error-message">First name is required</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Last Name</label>
-                                <input type="text" class="form-input" placeholder="Doe" data-field="lastName" required>
+                                <input type="text" class="form-input" name="lastName" placeholder="Doe" data-field="lastName" required>
                                 <div class="error-message">Last name is required</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Email Address</label>
-                                <input type="email" class="form-input" placeholder="john.doe@example.com" data-field="email" required>
+                                <input type="email" class="form-input" name="email" placeholder="john.doe@example.com" data-field="email" required>
                                 <div class="error-message">Valid email is required</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Marital Status</label>
-                                <select class="form-select" data-field="maritalStatus" required>
+                                <select class="form-select" name="maritalStatus" data-field="maritalStatus" required>
                                     <option value="">Select Status</option>
                                     <option>Single</option>
                                     <option>Married</option>
@@ -142,22 +154,22 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Street Address</label>
-                                <input type="text" class="form-input" placeholder="123 Main Street" data-field="streetAddress" required>
+                                <input type="text" class="form-input" name="streetAddress" placeholder="123 Main Street" data-field="streetAddress" required>
                                 <div class="error-message">Street address is required</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">City</label>
-                                <input type="text" class="form-input" placeholder="Nairobi" data-field="city" required>
+                                <input type="text" class="form-input" name="city" placeholder="Nairobi" data-field="city" required>
                                 <div class="error-message">City is required</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">State / County</label>
-                                <input type="text" class="form-input" placeholder="Nairobi County" data-field="state" required>
+                                <input type="text" class="form-input" name="state" placeholder="Nairobi County" data-field="state" required>
                                 <div class="error-message">County is required</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">ZIP / Postal Code</label>
-                                <input type="text" class="form-input" placeholder="00100" data-field="postalCode" required>
+                                <input type="text" class="form-input" name="postalCode" placeholder="00100" data-field="postalCode" required>
                                 <div class="error-message">Postal code is required</div>
                             </div>
                         </div>
@@ -174,7 +186,7 @@
                         <div class="form-grid single">
                             <div class="form-group">
                                 <label class="form-label">Employment Status</label>
-                                <select class="form-select" data-field="employmentStatus" required>
+                                <select class="form-select" name="employmentStatus" data-field="employmentStatus" required>
                                     <option value="">Select Status</option>
                                     <option>Employed - Full Time</option>
                                     <option>Employed - Part Time</option>
@@ -188,17 +200,17 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Occupation</label>
-                                <input type="text" class="form-input" placeholder="e.g., Software Engineer, Accountant" data-field="occupation" required>
+                                <input type="text" class="form-input" name="occupation" placeholder="e.g., Software Engineer, Accountant" data-field="occupation" required>
                                 <div class="error-message">Occupation is required</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Company Name</label>
-                                <input type="text" class="form-input" placeholder="Your Company" data-field="companyName" required>
+                                <input type="text" class="form-input" name="companyName" placeholder="Your Company" data-field="companyName" required>
                                 <div class="error-message">Company name is required</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Industry</label>
-                                <select class="form-select" data-field="industry" required>
+                                <select class="form-select" name="industry" data-field="industry" required>
                                     <option value="">Select Industry</option>
                                     <option>Technology</option>
                                     <option>Finance</option>
@@ -212,7 +224,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Years in Current Job</label>
-                                <input type="number" class="form-input" placeholder="2" min="0" data-field="yearsInJob" required>
+                                <input type="number" class="form-input" name="yearsInJob" placeholder="2" min="0" data-field="yearsInJob" required>
                                 <div class="error-message">Years in job is required</div>
                             </div>
                         </div>
@@ -229,12 +241,12 @@
                         <div class="form-grid single">
                             <div class="form-group">
                                 <label class="form-label">Annual Salary</label>
-                                <input type="number" class="form-input" placeholder="50000" data-field="annualSalary" required>
+                                <input type="number" class="form-input" name="annualSalary" placeholder="50000" data-field="annualSalary" required>
                                 <div class="error-message">Annual salary is required</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Income Source</label>
-                                <select class="form-select" data-field="incomeSource" required>
+                                <select class="form-select" name="incomeSource" data-field="incomeSource" required>
                                     <option value="">Select Income Source</option>
                                     <option>Salary</option>
                                     <option>Business Income</option>
@@ -247,17 +259,17 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Monthly Expenses</label>
-                                <input type="number" class="form-input" placeholder="3000" data-field="monthlyExpenses" required>
+                                <input type="number" class="form-input" name="monthlyExpenses" placeholder="3000" data-field="monthlyExpenses" required>
                                 <div class="error-message">Monthly expenses is required</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Existing Loan/Debt</label>
-                                <input type="number" class="form-input" placeholder="0" data-field="existingDebt" required>
+                                <input type="number" class="form-input" name="existingDebt" placeholder="0" data-field="existingDebt" required>
                                 <div class="error-message">Existing debt is required</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Bank Account Type</label>
-                                <select class="form-select" data-field="bankAccountType" required>
+                                <select class="form-select" name="bankAccountType" data-field="bankAccountType" required>
                                     <option value="">Select Account Type</option>
                                     <option>Savings Account</option>
                                     <option>Checking Account</option>
@@ -282,7 +294,7 @@
                                 <label class="slider-label">Desired Loan Amount</label>
                                 <div class="slider-value" id="loanAmount">$50,000</div>
                             </div>
-                            <input type="range" class="range-slider" id="loanSlider" min="5000" max="500000"
+                            <input type="range" name="loanSlider" class="range-slider" id="loanSlider" min="5000" max="500000"
                                 value="50000" step="5000">
                             <div class="slider-range">
                                 <span>$5,000</span>
@@ -292,7 +304,7 @@
                         <div class="form-grid single">
                             <div class="form-group">
                                 <label class="form-label">Loan Purpose</label>
-                                <select class="form-select" data-field="loanPurpose" required>
+                                <select class="form-select" name="loanPurpose" data-field="loanPurpose" required>
                                     <option value="">Select Purpose</option>
                                     <option>Home Purchase</option>
                                     <option>Home Renovation</option>
@@ -306,7 +318,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Preferred Loan Term</label>
-                                <select class="form-select" data-field="loanTerm" required>
+                                <select class="form-select" name="loanTerm" data-field="loanTerm" required>
                                     <option value="">Select Term</option>
                                     <option>1 Year</option>
                                     <option>3 Years</option>
@@ -328,51 +340,63 @@
                         <p class="header-subtitle">Please review your information before submitting</p>
                     </div>
                     <div class="form-content">
-                        <div
-                            style="background: linear-gradient(135deg, rgba(27, 107, 63, 0.05) 0%, rgba(212, 165, 0, 0.05) 100%); padding: 24px; border-radius: 8px; border: 2px solid rgba(27, 107, 63, 0.1); margin-bottom: 24px;">
-                            <h3 style="color: var(--primary-green); margin-bottom: 16px; font-size: 16px;">Application
-                                Summary</h3>
-                            <div
-                                style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; font-size: 14px;">
-                                <div>
-                                    <p style="color: var(--text-secondary); margin-bottom: 4px;">ID Type</p>
-                                    <p style="color: var(--text-primary); font-weight: 600;">National ID</p>
-                                </div>
-                                <div>
-                                    <p style="color: var(--text-secondary); margin-bottom: 4px;">Full Name</p>
-                                    <p style="color: var(--text-primary); font-weight: 600;">John Doe</p>
-                                </div>
-                                <div>
-                                    <p style="color: var(--text-secondary); margin-bottom: 4px;">Email</p>
-                                    <p style="color: var(--text-primary); font-weight: 600;">john.doe@example.com</p>
-                                </div>
-                                <div>
-                                    <p style="color: var(--text-secondary); margin-bottom: 4px;">Employment</p>
-                                    <p style="color: var(--text-primary); font-weight: 600;">Full Time</p>
-                                </div>
-                                <div>
-                                    <p style="color: var(--text-secondary); margin-bottom: 4px;">Annual Salary</p>
-                                    <p style="color: var(--text-primary); font-weight: 600;">$50,000</p>
-                                </div>
-                                <div>
-                                    <p style="color: var(--text-secondary); margin-bottom: 4px;">Requested Loan</p>
-                                    <p style="color: var(--primary-gold); font-weight: 700; font-size: 18px;">$50,000
-                                    </p>
-                                </div>
+                    <div style="background: linear-gradient(135deg, rgba(27, 107, 63, 0.05) 0%, rgba(212, 165, 0, 0.05) 100%);
+                                   padding      : 24px;
+                                   border-radius: 8px;
+                                   border       : 2px solid rgba(27, 107, 63, 0.1);
+                                   margin-bottom: 24px;">
+                    
+                        <h3 style="color: var(--primary-green); margin-bottom: 16px; font-size: 16px;">
+                            Application Summary
+                        </h3>
+                    
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; font-size: 14px;">
+                    
+                            <div>
+                                <p style="color: var(--text-secondary); margin-bottom: 4px;">ID Type</p>
+                                <p style="color: var(--text-primary); font-weight: 600;" data-summary="idType"></p>
                             </div>
-                        </div>
-                        <div class="form-grid single">
-                            <div class="form-group">
+                    
+                            <div>
+                                <p style="color: var(--text-secondary); margin-bottom: 4px;">Full Name</p>
+                                <p style="color: var(--text-primary); font-weight: 600;">
+                                    <span data-summary="firstName"></span>
+                                    <span data-summary="lastName"></span>
+                                </p>
+                            </div>
+                    
+                            <div>
+                                <p style="color: var(--text-secondary); margin-bottom: 4px;">Email</p>
+                                <p style="color: var(--text-primary); font-weight: 600;" data-summary="email"></p>
+                            </div>
+                    
+                            <div>
+                                <p style="color: var(--text-secondary); margin-bottom: 4px;">Employment</p>
+                                <p style="color: var(--text-primary); font-weight: 600;" data-summary="employmentStatus"></p>
+                            </div>
+                    
+                            <div>
+                                <p style="color: var(--text-secondary); margin-bottom: 4px;">Annual Salary</p>
+                                <p style="color: var(--text-primary); font-weight: 600;" data-summary="annualSalary"></p>
+                            </div>
+                    
+                            <div>
+                                <p style="color: var(--text-secondary); margin-bottom: 4px;">Requested Loan</p>
+                                <p style="color: var(--primary-gold); font-weight: 700; font-size: 18px;" data-summary="loanSlider"></p>
+                            </div>
+                    <div class="form-group">
                                 <label class="form-label" style="text-transform: none; font-weight: 500;">
-                                    <input type="checkbox" id="termsCheckbox" data-field="terms" style="margin-right: 8px; cursor: pointer;">
+                                    <input type="checkbox" name="terms" id="termsCheckbox" data-field="terms" style="margin-right: 8px; cursor: pointer;">
                                     I agree to the Terms & Conditions and Privacy Policy
                                 </label>
                                 <div class="error-message">You must agree to the terms and conditions</div>
                             </div>
                         </div>
+                      </div>
+                      </div>
                     </div>
-                </div>
-
+                    </div>
+                </div>            
                 <!-- Footer with Navigation -->
                 <div class="footer">
                     <div class="progress-indicator">
@@ -386,6 +410,7 @@
                     </div>
                 </div>
             </div>
+        </form>
         </div>
     </div>
 <script src="/static/js/dash.js"></script>

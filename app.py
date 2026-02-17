@@ -1,54 +1,21 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from extensions import db
 from config import Config
 from datetime import datetime
 from functools import wraps
+from models import User, LoanApplication  # Import your models
+from api.user_profile import user_profile_bp  # Import the user profile route
 
 # ====================
 # APP SETUP
 # ====================
 app = Flask(__name__)
 app.config.from_object(Config)
-db = SQLAlchemy(app)
+db.init_app(app)
+app.register_blueprint(user_profile_bp, url_prefix='/api')
 
-# ====================
-# MODELS
-# ====================
-class User(db.Model):
-    __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(150), nullable=False)
-    lastname = db.Column(db.String(150), nullable=False)
-    email = db.Column(db.String(150), unique=True, nullable=False)
-    national_id = db.Column(db.String(20), unique=True, nullable=False)
-    phonenumber = db.Column(db.String(20), nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(50), default='user')  # future: admin, underwriter
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    applications = db.relationship(
-        'LoanApplication',
-        backref='user',
-        lazy=True,
-        cascade="all, delete-orphan"
-    )
-
-class LoanApplication(db.Model):
-    __tablename__ = 'loan_application'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    income = db.Column(db.Float, nullable=False)
-    debt = db.Column(db.Float, nullable=False)
-    credit_score = db.Column(db.Integer, nullable=False)
-    employment_years = db.Column(db.Integer, nullable=False)
-    loan_amount = db.Column(db.Float, nullable=False)
-    status = db.Column(db.String(50), default='pending')
-    risk_score = db.Column(db.Float)
-    recommendation = db.Column(db.String(50))
-    scoring_version = db.Column(db.String(20))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    evaluated_at = db.Column(db.DateTime)
 
 # ====================
 # RISK CALCULATION
@@ -198,33 +165,76 @@ def dashboard():
     return render_template('landing.html')
 
 @app.route('/apply-loan', methods=['GET', 'POST'])
-@login_required
 def apply_loan():
-    if request.method == 'POST':
-        user_id = session.get('user_id')
-        income = float(request.form['income'])
-        debt = float(request.form['debt'])
-        credit_score = int(request.form['credit_score'])
-        employment_years = int(request.form['employment_years'])
-        loan_amount = float(request.form['loan_amount'])
+    if 'user_id' not in session:
+        flash("Please login to apply for a loan", "danger")
+        return redirect(url_for('login'))
 
+    if request.method == 'POST':
+        # KYC
+        id_type = request.form.get('id_type')
+        id_number = request.form.get('id_number')
+        phone_number = request.form.get('phone_number')
+        dob = request.form.get('dateOfBirth')
+
+        # Personal
+        first_name = request.form.get('firstName')
+        last_name = request.form.get('lastName')
+        email = request.form.get('email')
+        marital_status = request.form.get('maritalStatus')
+        street = request.form.get('streetAddress')
+        city = request.form.get('city')
+        county = request.form.get('state')
+        postal_code = request.form.get('postalCode')
+
+        # Employment
+        employment_status = request.form.get('employmentStatus')
+        occupation = request.form.get('occupation')
+        company_name = request.form.get('companyName')
+        industry = request.form.get('industry')
+        years_in_job = request.form.get('yearsInJob')
+
+        # Salary & Income
+        annual_salary = float(request.form.get('annualSalary', 0))
+        income_source = request.form.get('incomeSource')
+        monthly_expenses = float(request.form.get('monthlyExpenses', 0))
+        existing_debt = float(request.form.get('existingDebt', 0))
+        bank_account_type = request.form.get('bankAccountType')
+
+        # Loan
+        loan_amount = float(request.form.get('loanSlider', 0))
+        loan_purpose = request.form.get('loanPurpose')
+        loan_term = request.form.get('loanTerm')
+
+        # Terms checkbox
+        terms = request.form.get('terms')
+        if not terms:
+            flash("You must agree to the terms and conditions", "danger")
+            return redirect(url_for('apply_loan'))
+
+        # Calculate risk
         risk_score, recommendation = calculate_risk(
-            income, debt, credit_score, employment_years, loan_amount
+            income=annual_salary,
+            debt=existing_debt,
+            credit_score=700,  # You might want to collect this too
+            employment_years=int(years_in_job),
+            loan_amount=loan_amount
         )
 
-        new_application = LoanApplication(
-            user_id=user_id,
-            income=income,
-            debt=debt,
-            credit_score=credit_score,
-            employment_years=employment_years,
+        # Save application
+        application = LoanApplication(
+            user_id=session['user_id'],
+            income=annual_salary,
+            debt=existing_debt,
+            credit_score=700,
+            employment_years=int(years_in_job),
             loan_amount=loan_amount,
             risk_score=risk_score,
             recommendation=recommendation,
-            status=recommendation,
-            created_at=datetime.utcnow()
+            status=recommendation
         )
-        db.session.add(new_application)
+
+        db.session.add(application)
         db.session.commit()
 
         flash("Loan application submitted successfully!", "success")
