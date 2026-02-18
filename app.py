@@ -42,19 +42,10 @@ class LoanApplication(db.Model):
 @app.route('/')
 def home():
     return render_template('landing.html')
-<<<<<<< HEAD
-#route for login page
-@app.route('/login')
-def login():
-    return render_template('login.html')
-#route for regestration page
-@app.route('/signup')
-=======
 
 # Signup route (GET + POST)
 
 @app.route('/signup', methods=['GET', 'POST'])
->>>>>>> origin/feature/sammy
 def signup():
     if request.method == 'POST':
         # Get form data
@@ -101,10 +92,7 @@ def signup():
 
     # GET request
     return render_template('signup.html')
-<<<<<<< HEAD
 #landing page after login
-
-=======
 
 # Login page
 from werkzeug.security import check_password_hash
@@ -137,7 +125,6 @@ def login():
 
 
 # Dashboard
->>>>>>> origin/feature/sammy
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')

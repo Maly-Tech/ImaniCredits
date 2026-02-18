@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-#to store secret keys
-=======
 import os
 
 class Config:
@@ -14,4 +11,3 @@ class Config:
 
     # Disable tracking modifications to save memory
     SQLALCHEMY_TRACK_MODIFICATIONS = False
->>>>>>> origin/feature/sammy
