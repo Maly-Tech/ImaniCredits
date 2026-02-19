@@ -8,7 +8,7 @@ const loanForm = document.getElementById('loanForm');
 
 async function fetchAndPrefillUserFields() {
     try {
-        const response = await fetch('/user_profile');
+        const response = await fetch('/api/user_profile');
         if (!response.ok) throw new Error('Failed to fetch user data');
 
         const data = await response.json();

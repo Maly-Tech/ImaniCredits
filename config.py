@@ -1,13 +1,19 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Config:
-    # Flask secret key (needed for forms and sessions)
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'simplesecretkey123'
+    SECRET_KEY = os.getenv("SECRET_KEY", "simplesecretkey123")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "mysql+pymysql://root:Mr.l0n3wolf1.@localhost/imanicredit")
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+# Flask secret key (needed for forms and sessions)
+   ## SECRET_KEY = os.environ.get('SECRET_KEY') or 'simplesecretkey123'
 
     # MySQL database URI
     # Format: mysql+pymysql://username:password@host/databasename
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://root:Mr.l0n3wolf1.@localhost/imanicredit'
+    ##SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        ##'mysql+pymysql://root:Mr.l0n3wolf1.@localhost/imanicredit'
 
     # Disable tracking modifications to save memory
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    ##SQLALCHEMY_TRACK_MODIFICATIONS = False

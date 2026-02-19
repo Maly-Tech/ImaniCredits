@@ -37,6 +37,19 @@ class LoanApplication(db.Model):
     scoring_version = db.Column(db.String(20))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     evaluated_at = db.Column(db.DateTime)
+    risk_details = db.relationship(
+        'LoanRiskDetails',
+        backref='loan_application',
+        uselist=False,
+        cascade="all, delete-orphan"
+    )
+
+class LoanRiskDetails(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    application_id = db.Column(db.Integer, db.ForeignKey('loan_application.id'))
+    breakdown = db.Column(db.JSON)
+    ratios = db.Column(db.JSON)
+
      
 def get_user_by_id(user_id):
     return User.query.get(user_id)
