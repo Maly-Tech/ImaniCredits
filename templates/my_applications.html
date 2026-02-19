@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Loan Applications - Imani Credit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Loan Applications - Imani Credit</title>
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
-<body>
+<body class="body">
 
 <!-- NAVBAR -->
 <nav class="navbar">
@@ -31,7 +31,6 @@
   {% endif %}
 </nav>
 
-<!-- HERO / CONTENT SECTION -->
 <section class="hero">
   <div class="hero-overlay"></div>
   <div class="hero-content animate">
@@ -40,39 +39,85 @@
 
     {% if applications %}
     <table class="applications-table">
-      <thead>
-        <tr>
-          <th>Date Submitted</th>
-          <th>Loan Amount</th>
-          <th>Income</th>
-          <th>Debt</th>
-          <th>Credit Score</th>
-          <th>Employment Years</th>
-          <th>Risk Score</th>
-          <th>Recommendation</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for app in applications %}
-        <tr>
-          <td>{{ app.created_at.strftime('%Y-%m-%d') }}</td>
-          <td>{{ app.loan_amount }}</td>
-          <td>{{ app.income }}</td>
-          <td>{{ app.debt }}</td>
-          <td>{{ app.credit_score }}</td>
-          <td>{{ app.employment_years }}</td>
-          <td>{{ app.risk_score or 'N/A' }}</td>
-          <td>{{ app.recommendation or 'Pending' }}</td>
-          <td>{{ app.status.capitalize() }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="table-container">
+        <thead>
+          <tr>
+            <th>Date Submitted</th>
+            <th>Loan Amount</th>
+            <th>Income</th>
+            <th>Debt</th>
+            <th>Credit Score</th>
+            <th>Employment Years</th>
+            <th>Risk Score</th>
+            <th>Recommendation</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for app in applications %}
+          {% set risk = app.risk_details %}
+
+          <!-- Main Row -->
+          <tr>
+            <td data-label="Date Submitted">
+              {{ app.created_at.strftime('%Y-%m-%d') if app.created_at else 'N/A' }}
+            </td>
+            <td data-label="Loan Amount">{{ app.loan_amount }}</td>
+            <td data-label="Income">{{ app.income }}</td>
+            <td data-label="Debt">{{ app.debt }}</td>
+            <td data-label="Credit Score">{{ app.credit_score }}</td>
+            <td data-label="Employment Years">{{ app.employment_years }}</td>
+            <td data-label="Risk Score">{{ app.risk_score or 'N/A' }}</td>
+            <td data-label="Recommendation">
+              {{ app.recommendation if app.recommendation else 'Pending' }}
+            </td>
+            <td data-label="Status">
+              {{ app.status.capitalize() if app.status else 'Pending' }}
+            </td>
+          </tr>
+
+          <!-- Explainability Row -->
+          {% if risk %}
+          <tr class="risk-details-row">
+            <td colspan="9">
+              <details>
+                <summary><strong>View Risk Explainability</strong></summary>
+
+                <div style="margin-top: 10px;">
+                  <h4>Breakdown</h4>
+                  <ul>
+                    {% for key, value in risk.breakdown.items() %}
+                      <li>
+                        {{ key.replace('_', ' ').title() }}: {{ value }}%
+                      </li>
+                    {% endfor %}
+                  </ul>
+
+                  <h4>Financial Ratios</h4>
+                  <ul>
+                    {% for key, value in risk.ratios.items() %}
+                      <li>
+                        {{ key.replace('_', ' ').title() }}: {{ value }}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </details>
+            </td>
+          </tr>
+          {% endif %}
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
     {% else %}
       <p>You have not submitted any loan applications yet.</p>
       <a href="/apply-loan" class="btn-primary">Apply for a Loan</a>
     {% endif %}
+
   </div>
 </section>
 

@@ -1,103 +1,85 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from extensions import db
 from config import Config
 from datetime import datetime
 from functools import wraps
+from models import User, LoanApplication, LoanRiskDetails  # Import your models
+from api.user_profile import user_profile_bp  # Import the user profile route
 
 # ====================
 # APP SETUP
 # ====================
 app = Flask(__name__)
 app.config.from_object(Config)
-db = SQLAlchemy(app)
+db.init_app(app)
+app.register_blueprint(user_profile_bp, url_prefix='/api')
+
 
 # ====================
-# MODELS
+# RISK CALCULATION
 # ====================
-class User(db.Model):
-    __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(150), nullable=False)
-    lastname = db.Column(db.String(150), nullable=False)
-    email = db.Column(db.String(150), unique=True, nullable=False)
-    national_id = db.Column(db.String(20), unique=True, nullable=False)
-    phonenumber = db.Column(db.String(20), nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(50), default='user')  # future: admin, underwriter
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    applications = db.relationship(
-        'LoanApplication',
-        backref='user',
-        lazy=True,
-        cascade="all, delete-orphan"
-    )
-
-class LoanApplication(db.Model):
-    __tablename__ = 'loan_application'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    income = db.Column(db.Float, nullable=False)
-    debt = db.Column(db.Float, nullable=False)
-    credit_score = db.Column(db.Integer, nullable=False)
-    employment_years = db.Column(db.Integer, nullable=False)
-    loan_amount = db.Column(db.Float, nullable=False)
-    status = db.Column(db.String(50), default='pending')
-    risk_score = db.Column(db.Float)
-    recommendation = db.Column(db.String(50))
-    scoring_version = db.Column(db.String(20))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    evaluated_at = db.Column(db.DateTime)
-
 # ====================
 # RISK CALCULATION
 # ====================
 def calculate_risk(income, debt, credit_score, employment_years, loan_amount):
     """
-    Calculates a risk score for a loan application and gives a recommendation.
-    
-    Inputs:
-        income (float)          : monthly income of applicant
-        debt (float)            : monthly debt obligations
-        credit_score (int)      : 300-850 range
-        employment_years (int)  : number of years employed
-        loan_amount (float)     : requested loan amount
-    
+    Weighted Multi-Criteria Risk Model with explainability.
     Returns:
-        risk_score (float)      : calculated risk score (0-100)
-        recommendation (str)    : 'approved' or 'rejected'
+        risk_score (float), recommendation (str), breakdown (dict), ratios (dict)
     """
+    if income <= 0:
+        raise ValueError("Income must be greater than zero")
 
-    score = 0
+    # ---- Derived Ratios ----
+    dti = debt / income
+    loan_income_ratio = loan_amount / income
 
-    # 1. Financial capacity: % of income available after debt
-    if income > 0:
-        available_ratio = max(income - debt, 0) / income  # 0-1
+    # ---- Normalization (0–1 scale) ----
+    credit_norm = max(0, min((credit_score - 300) / (850 - 300), 1))
+    employment_norm = max(0, min(employment_years / 10, 1))
+    dti_norm = max(0, min(1 - dti, 1))
+    loan_ratio_norm = max(0, min(1 - loan_income_ratio, 1))
+
+    # ---- Weighted Score ----
+    weights = {
+        "credit": 0.35,
+        "dti": 0.30,
+        "loan_ratio": 0.20,
+        "employment": 0.15
+    }
+
+    credit_component = weights["credit"] * credit_norm
+    dti_component = weights["dti"] * dti_norm
+    loan_component = weights["loan_ratio"] * loan_ratio_norm
+    employment_component = weights["employment"] * employment_norm
+
+    total_score = (credit_component + dti_component + loan_component + employment_component) * 100
+
+    # ---- Recommendation ----
+    if total_score >= 75:
+        recommendation = "Approve"
+    elif total_score >= 60:
+        recommendation = "Review"
     else:
-        available_ratio = 0
-    score += available_ratio * 30  # max 30 points
+        recommendation = "Reject"
 
-    # 2. Credit score normalization
-    score += (credit_score / 850) * 40  # max 40 points
+    breakdown = {
+        "credit_score_contribution": round(credit_component * 100, 2),
+        "dti_contribution": round(dti_component * 100, 2),
+        "loan_burden_contribution": round(loan_component * 100, 2),
+        "employment_contribution": round(employment_component * 100, 2),
+    }
 
-    # 3. Employment years contribution (cap at 10 years)
-    score += min(employment_years, 10) * 2  # max 20 points
+    ratios = {
+        "debt_to_income": round(dti, 2),
+        "loan_to_income": round(loan_income_ratio, 2)
+    }
 
-    # 4. Loan amount vs income: bigger loan reduces score
-    if income > 0:
-        loan_ratio = loan_amount / income
-    else:
-        loan_ratio = 1
-    score -= min(loan_ratio * 20, 20)  # max deduction 20 points
+    return round(total_score, 2), recommendation, breakdown, ratios
 
-    # Ensure score is between 0 and 100
-    risk_score = max(min(score, 100), 0)
 
-    # Recommendation threshold
-    recommendation = "approved" if risk_score >= 50 else "rejected"
-
-    return round(risk_score, 2), recommendation
 
 
 # ====================
@@ -197,34 +179,64 @@ def logout():
 def dashboard():
     return render_template('landing.html')
 
+# Loan application route
+
 @app.route('/apply-loan', methods=['GET', 'POST'])
 @login_required
 def apply_loan():
     if request.method == 'POST':
-        user_id = session.get('user_id')
-        income = float(request.form['income'])
-        debt = float(request.form['debt'])
-        credit_score = int(request.form['credit_score'])
-        employment_years = int(request.form['employment_years'])
-        loan_amount = float(request.form['loan_amount'])
+        # ---------------------------
+        # Collect form data
+        # ---------------------------
+        annual_salary = float(request.form.get('annualSalary', 0))
+        existing_debt = float(request.form.get('existingDebt', 0))
+        years_in_job = int(request.form.get('yearsInJob', 0))
+        loan_amount = float(request.form.get('loanSlider', 0))
+        credit_score = 700  # Placeholder; can later fetch from external API
 
-        risk_score, recommendation = calculate_risk(
-            income, debt, credit_score, employment_years, loan_amount
+        # Terms validation
+        terms = request.form.get('terms')
+        if not terms:
+            flash("You must agree to the terms and conditions", "danger")
+            return redirect(url_for('apply_loan'))
+
+        # ---------------------------
+        # Calculate risk
+        # ---------------------------
+        risk_score, recommendation, breakdown, ratios = calculate_risk(
+            income=annual_salary,
+            debt=existing_debt,
+            credit_score=credit_score,
+            employment_years=years_in_job,
+            loan_amount=loan_amount
         )
 
-        new_application = LoanApplication(
-            user_id=user_id,
-            income=income,
-            debt=debt,
+        # ---------------------------
+        # Save Loan Application
+        # ---------------------------
+        application = LoanApplication(
+            user_id=session['user_id'],
+            income=annual_salary,
+            debt=existing_debt,
             credit_score=credit_score,
-            employment_years=employment_years,
+            employment_years=years_in_job,
             loan_amount=loan_amount,
             risk_score=risk_score,
             recommendation=recommendation,
-            status=recommendation,
-            created_at=datetime.utcnow()
+            status=recommendation
         )
-        db.session.add(new_application)
+        db.session.add(application)
+        db.session.commit()  # Must commit first to get application.id
+
+        # ---------------------------
+        # Save Risk Explainability
+        # ---------------------------
+        risk_details = LoanRiskDetails(
+            application_id=application.id,
+            breakdown=breakdown,
+            ratios=ratios
+        )
+        db.session.add(risk_details)
         db.session.commit()
 
         flash("Loan application submitted successfully!", "success")
@@ -232,12 +244,19 @@ def apply_loan():
 
     return render_template('apply_loan.html')
 
+
+
 @app.route('/my-applications')
 @login_required
 def my_applications():
     user_id = session.get('user_id')
-    applications = LoanApplication.query.filter_by(user_id=user_id).order_by(LoanApplication.created_at.desc()).all()
+    applications = LoanApplication.query\
+        .filter_by(user_id=user_id)\
+        .order_by(LoanApplication.created_at.desc())\
+        .all()
+
     return render_template('my_applications.html', applications=applications)
+
 
 # ====================
 # RUN SERVER
