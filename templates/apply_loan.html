@@ -24,8 +24,17 @@
         <li><a href="#">Contact</a></li>
     </ul>
 
+ {% if 'user_id' not in session %}
 
-    <a href="/login" class="btn-nav">Sign In</a>
+  <a href="{{ url_for('signup') }}" class="btn-primary">Sign up</a>
+  <a href="{{ url_for('login') }}" class="btn-nav">Sign In</a>
+
+    {% else %}
+
+    <span class="welcome-text">Hi, {{ session['firstname'] }}</span>
+    <a href="{{ url_for('logout') }}" class="btn-nav">Logout</a>
+
+    {% endif %}
     </nav>
 
     <!-- Main Container -->
@@ -36,12 +45,12 @@
                 <div class="steps" id="steps">
                     <div class="step active" data-step="1">
                         <div class="step-indicator">1</div>
-                        <div class="step-tooltip">KYC</div>
+                        <div class="step-tooltip">Personal</div>
                     </div>
 
                     <div class="step pending" data-step="2">
                         <div class="step-indicator">2</div>
-                        <div class="step-tooltip">Personal</div>
+                        <div class="step-tooltip">KYC</div>
                     </div>
 
                     <div class="step pending" data-step="3">
@@ -69,7 +78,7 @@
             <!-- Main Content -->
             <div class="main-content">
                 <!-- Step 1: KYC Verification -->
-                <div class="form-section active" data-step="1">
+                <div class="form-section active" data-step="2">
                     <div class="header">
                         <h1 class="header-title">KYC Verification</h1>
                         <p class="header-subtitle">Verify your identity with government ID and phone number</p>
@@ -107,7 +116,7 @@
                 </div>
 
                 <!-- Step 2: Personal Profile -->
-                <div class="form-section" data-step="2">
+                <div class="form-section" data-step="1">
                     <div class="header">
                         <h1 class="header-title">Personal Profile</h1>
                         <p class="header-subtitle">Tell us about yourself</p>
