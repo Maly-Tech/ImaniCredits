@@ -27,7 +27,6 @@
 
  {% if 'user_id' not in session %}
 
-<<<<<<< HEAD
   <a href="{{ url_for('signup') }}" class="btn-primary">Sign up</a>
   <a href="{{ url_for('login') }}" class="btn-nav">Sign In</a>
 
@@ -37,20 +36,6 @@
     <a href="{{ url_for('logout') }}" class="btn-nav">Logout</a>
 
     {% endif %}
-=======
-    {% if 'user_id' not in session %}
-
-  <a href="{{ url_for('signup') }}" class="btn-primary">Sign up</a>
-  <a href="{{ url_for('login') }}" class="btn-nav">Sign In</a>
-
-{% else %}
-
-  <span class="welcome-text">Hi, {{ session['firstname'] }}</span>
-  <a href="{{ url_for('logout') }}" class="btn-nav">Logout</a>
-
-{% endif %}
-
->>>>>>> 1af09b9eaf8475d85d7f58e0eb14681bde77b4e6
     </nav>
 
     <!-- Main Container -->

@@ -21,7 +21,7 @@ body {
   align-items: center;
   justify-content: space-between;
   z-index: 10;
-  background: rgba(5, 60, 45, 0.2); /* slight transparency for contrast */
+  background: #04AA6D; /* slight transparency for contrast */
   backdrop-filter: blur(8px);
 }
 
