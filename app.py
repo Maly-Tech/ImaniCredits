@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import db
@@ -9,17 +9,34 @@ from models import User, LoanApplication, LoanRiskDetails  # Import your models
 from api.user_profile import user_profile_bp  # Import the user profile route
 
 # ====================
+# CREATE ADMIN USER
+# ====================
+def create_admin():
+    admin = User.query.filter_by(email="admin@gmail.com").first()
+    if not admin:
+        admin = User(
+            firstname="Admin",
+            lastname="User",
+            email="admin@gmail.com",
+            national_id="0000000000",
+            phonenumber="0000000000",
+            password_hash=generate_password_hash("admin123"),
+            role="admin"
+        )
+        db.session.add(admin)
+        db.session.commit()
+
+# ====================
 # APP SETUP
 # ====================
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 app.register_blueprint(user_profile_bp, url_prefix='/api')
+with app.app_context():
+    db.create_all()
+    create_admin()
 
-
-# ====================
-# RISK CALCULATION
-# ====================
 # ====================
 # RISK CALCULATION
 # ====================
@@ -32,50 +49,24 @@ def calculate_risk(income, debt, credit_score, employment_years, loan_amount):
     if income <= 0:
         raise ValueError("Income must be greater than zero")
 
-    # ---- Derived Ratios ----
     dti = debt / income
     loan_income_ratio = loan_amount / income
 
-    # ---- Normalization (0–1 scale) ----
-    credit_norm = max(0, min((credit_score - 300) / (850 - 300), 1))
-    employment_norm = max(0, min(employment_years / 10, 1))
-    dti_norm = max(0, min(1 - dti, 1))
-    loan_ratio_norm = max(0, min(1 - loan_income_ratio, 1))
+    def normalize(value, min_val=0, max_val=1):
+        return max(0, min(value, max_val - min_val))
 
-    # ---- Weighted Score ----
-    weights = {
-        "credit": 0.35,
-        "dti": 0.30,
-        "loan_ratio": 0.20,
-        "employment": 0.15
+    components = {
+        "credit": 0.35 * normalize((credit_score - 300) / 550),
+        "dti": 0.30 * normalize(1 - dti),
+        "loan_ratio": 0.20 * normalize(1 - loan_income_ratio),
+        "employment": 0.15 * normalize(employment_years / 10)
     }
 
-    credit_component = weights["credit"] * credit_norm
-    dti_component = weights["dti"] * dti_norm
-    loan_component = weights["loan_ratio"] * loan_ratio_norm
-    employment_component = weights["employment"] * employment_norm
+    total_score = sum(components.values()) * 100
+    recommendation = "Approve" if total_score >= 75 else "Review" if total_score >= 60 else "Reject"
 
-    total_score = (credit_component + dti_component + loan_component + employment_component) * 100
-
-    # ---- Recommendation ----
-    if total_score >= 75:
-        recommendation = "Approve"
-    elif total_score >= 60:
-        recommendation = "Review"
-    else:
-        recommendation = "Reject"
-
-    breakdown = {
-        "credit_score_contribution": round(credit_component * 100, 2),
-        "dti_contribution": round(dti_component * 100, 2),
-        "loan_burden_contribution": round(loan_component * 100, 2),
-        "employment_contribution": round(employment_component * 100, 2),
-    }
-
-    ratios = {
-        "debt_to_income": round(dti, 2),
-        "loan_to_income": round(loan_income_ratio, 2)
-    }
+    breakdown = {f"{k}_contribution": round(v * 100, 2) for k, v in components.items()}
+    ratios = {"debt_to_income": round(dti, 2), "loan_to_income": round(loan_income_ratio, 2)}
 
     return round(total_score, 2), recommendation, breakdown, ratios
 
@@ -90,6 +81,15 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
             flash("Please login first.", "danger")
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get('role') != 'admin':
+            flash("Unauthorized access", "danger")
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
@@ -146,6 +146,52 @@ def signup():
 
     return render_template('signup.html')
 
+#===================
+# Admin Routes
+#===================
+@app.route('/admin/dashboard')
+@admin_required
+def admin_dashboard():
+    #get all applications for dashboard stats
+    applications = LoanApplication.query.order_by(LoanApplication.created_at.desc()).all()
+
+#compute stats
+    total_apps = len(applications)
+    pending_apps = sum(1 for a in applications if a.status.lower() == "pending")
+    approved_apps = sum(1 for a in applications if a.status.lower() == "approved")
+    rejected_apps = sum(1 for a in applications if a.status.lower() == "rejected")
+
+#prepare data for dashboard
+    apps_with_risk = []
+    for app in applications:
+        apps_with_risk.append({"application": app,
+        "risk_details": app.risk_details})
+
+    return render_template('admin/dashboard.html',
+                           stats={'total': total_apps, 'pending': pending_apps, 'approved': approved_apps, 'rejected': rejected_apps},
+                           applications=apps_with_risk)
+#===================
+#Override recommendation
+#=======================
+@app.route('/admin/override/<int:app_id>', methods=['POST'])
+@admin_required
+def override_recommendation(app_id):
+    new_status = request.form.get('status')
+    app = LoanApplication.query.get_or_404(app_id)
+    
+    if new_status not in ['Approved', 'Rejected', 'Pending']:
+        return jsonify({"error": "Invalid status"}), 400
+    app.recommendatiion = new_status
+    app.status = new_status
+    app.evaluated_at = datetime.utcnow()
+    db.session.commit()
+    return jsonify({"message": "Recommendation overridden successfully",
+                 "new_status": new_status})
+
+
+#===================
+# User Routes
+#===================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -164,9 +210,14 @@ def login():
         # Login success
         session['user_id'] = user.id
         session['firstname'] = user.firstname
+        session['role'] = user.role
+        
         flash(f'Welcome, {user.firstname}!', 'success')
-        return redirect(url_for('dashboard'))
 
+        if user.role == "admin":
+            return redirect(url_for('admin_dashboard'))
+        else:
+            return redirect(url_for('dashboard'))
     return render_template('login.html')
 
 @app.route('/logout')
@@ -257,8 +308,12 @@ def my_applications():
 
     return render_template('my_applications.html', applications=applications)
 
+#===================
+# Admin Login Route
+#===================
 
-# ====================
+
+
 # RUN SERVER
 # ====================
 if __name__ == "__main__":
