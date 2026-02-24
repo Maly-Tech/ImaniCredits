@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - ImaniCredit | Trusted Loan Decisions</title>
+    <style>
+        :root {
+            --primary: #1b6b3f;
+            --primary-dark: #0f4c2f;
+            --accent: #d4a500;
+            --accent-light: #f4d899;
+            --light-bg: #f9f7f4;
+            --text-primary: #2d3436;
+            --text-secondary: #636e72;
+            --border: #dfe6e9;
+            --success: #16a34a;
+            --error: #dc2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+.navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 70px;
+        padding: 0 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 99;
+        background:#04AA6D; /* slight transparency for contrast */
+        backdrop-filter: blur(8px);
+        }
+
+        .logo img {
+        height: 130px;
+        }
+
+        .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 28px;
+        }
+
+        .nav-links a {
+        text-decoration: none;
+        color: #e6fff4;
+        font-weight: 500;
+        transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+        color: #0f0f0f;
+        }
+
+        /* Sign In button */
+        .btn-nav {
+        padding: 10px 26px;
+        border-radius: 999px;
+        border: 1px solid #1fdd6e;
+        color: #1fdd6e;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        }
+
+        .btn-nav:hover {
+        background: #1fdd6e;
+        color: #08a35b;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            opacity: 0.95;
+        }
+
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: -2rem auto 3rem;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .faq-category {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-category:last-child {
+            border-bottom: none;
+        }
+
+        .category-title {
+            background: linear-gradient(135deg, rgba(27, 107, 63, 0.05) 0%, rgba(212, 165, 0, 0.05) 100%);
+            padding: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
+            border-left: 4px solid var(--accent);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+            transition: all 0.3s;
+        }
+
+        .category-title:hover {
+            background: linear-gradient(135deg, rgba(27, 107, 63, 0.1) 0%, rgba(212, 165, 0, 0.1) 100%);
+        }
+
+        .category-title.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .category-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .category-title.active .category-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-items.active {
+            max-height: 2000px;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 0;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            padding: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .faq-question:hover {
+            background: var(--light-bg);
+            color: var(--primary);
+        }
+
+        .faq-question.active {
+            background: rgba(27, 107, 63, 0.05);
+            color: var(--primary);
+        }
+
+        .faq-icon {
+            color: var(--accent);
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .faq-question.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 1.3rem;
+        }
+
+        .faq-answer.active {
+            max-height: 500px;
+            padding: 1.3rem;
+        }
+
+        .faq-answer-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .faq-answer-text strong {
+            color: var(--primary);
+        }
+
+        .faq-answer-text ul {
+            margin: 1rem 0 0 1.5rem;
+            padding-left: 0;
+        }
+
+        .faq-answer-text li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Contact CTA */
+        .contact-cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-radius: 12px;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-cta h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-cta p {
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #c49200;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 165, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-bg);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            opacity: 0.9;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .no-results-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .category-title {
+                font-size: 1.1rem;
+            }
+
+            .faq-question {
+                padding: 1rem;
+            }
+
+            .faq-answer.active {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+<nav class="navbar">
+            <div class="logo">
+                <img src="/static/images/logo.png" alt="Imani Credit Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/apply-loan">Apply for Loan</a></li>
+                <li><a href="/faq">FAQs</a></li>
+                <li><a href="/contact">Contact Us</a></li>
+            <a href="/logout" class="btn-nav">Logout</a>
+        </nav>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Frequently Asked Questions</h1>
+        <p>Find answers to common questions about our loan products and application process</p>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search FAQs...">
+        </div>
+    </div>
+
+    <!-- FAQ Container -->
+    <div class="container">
+        <div class="faq-section" id="faqContainer"></div>
+    </div>
+
+    <!-- Contact CTA -->
+    <div class="container">
+        <div class="contact-cta">
+            <h2>Can't find your answer?</h2>
+            <p>Our customer support team is here to help you with any questions or concerns.</p>
+            <a href="mailto:support@imanicredit.com" class="btn btn-secondary">Contact Support</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 ImaniCredit. All rights reserved. | Trusted Loan Decisions</p>
+    </footer>
+
+    <script>
+        // FAQ Data
+        const faqData = [
+            {
+                category: "About ImaniCredit",
+                items: [
+                    {
+                        question: "What is ImaniCredit?",
+                        answer: "ImaniCredit is a trusted online lending platform that provides quick, transparent, and fair loan decisions to individuals and businesses in Kenya. Our mission is to make borrowing accessible and straightforward for everyone."
+                    },
+                    {
+                        question: "Is ImaniCredit regulated?",
+                        answer: "Yes, ImaniCredit operates in compliance with Kenya's financial regulations and is registered with the relevant regulatory authorities. We maintain the highest standards of security and customer protection."
+                    },
+                    {
+                        question: "Why choose ImaniCredit?",
+                        answer: "<strong>Key reasons to choose us:</strong><ul><li>Fast approval process (24-48 hours)</li><li>Transparent terms and conditions</li><li>Competitive interest rates</li><li>No hidden charges</li><li>Professional customer support</li><li>Secure data protection</li></ul>"
+                    }
+                ]
+            },
+            {
+                category: "Loan Application Process",
+                items: [
+                    {
+                        question: "How do I apply for a loan?",
+                        answer: "The process is simple: (1) Click 'Apply for Loan' on our website, (2) Complete the multi-step application form with your personal, employment, and financial information, (3) Upload required documents, (4) Submit and wait for review. Most applications are reviewed within 24-48 hours."
+                    },
+                    {
+                        question: "What documents do I need to apply?",
+                        answer: "<strong>Required documents include:</strong><ul><li>Valid national ID or passport</li><li>Recent payslips (if employed)</li><li>Bank statements (last 3 months)</li><li>Tax compliance certificate</li><li>Employment letter (if applicable)</li><li>Proof of address (utility bill)</li></ul>"
+                    },
+                    {
+                        question: "How long does the approval process take?",
+                        answer: "Most applications are reviewed within 24-48 hours. You will receive an email notification about your application status. In some cases, we may request additional information which could extend the timeline. You can track your application status in your dashboard."
+                    },
+                    {
+                        question: "Can I apply if I'm self-employed?",
+                        answer: "Yes, self-employed individuals can apply. You will need to provide additional documentation such as business registration, audited financial statements, or tax compliance certificates covering at least 2 years of business operation."
+                    }
+                ]
+            },
+            {
+                category: "Eligibility & Requirements",
+                items: [
+                    {
+                        question: "What are the basic eligibility criteria?",
+                        answer: "<strong>To be eligible:</strong><ul><li>Must be at least 18 years old</li><li>Kenyan citizen or valid resident</li><li>Regular income (employed or self-employed)</li><li>Valid national ID or passport</li><li>Active bank account</li><li>Good credit history (preferred)</li></ul>"
+                    },
+                    {
+                        question: "Do you offer loans to unemployed people?",
+                        answer: "We primarily lend to individuals with regular income. However, if you have alternative income sources (rental income, investments, business income, pension), you may still qualify. Contact our support team for more information about your specific situation."
+                    },
+                    {
+                        question: "What is the minimum and maximum loan amount?",
+                        answer: "The minimum loan amount is KES 5,000 and the maximum is KES 500,000. The actual amount you can borrow depends on your income, credit history, employment status, and existing obligations."
+                    },
+                    {
+                        question: "How long can I borrow the money for?",
+                        answer: "Loan terms range from 1 to 20 years, depending on the loan amount and your preference. Longer terms result in lower monthly payments, while shorter terms cost less in total interest."
+                    }
+                ]
+            },
+            {
+                category: "Interest Rates & Fees",
+                items: [
+                    {
+                        question: "What are your interest rates?",
+                        answer: "Our interest rates range from 8% to 18% per annum, depending on factors such as loan amount, term, credit profile, and employment status. The exact rate will be communicated during your loan review."
+                    },
+                    {
+                        question: "Are there any hidden charges?",
+                        answer: "No, ImaniCredit operates on complete transparency. All costs including interest rates, processing fees, and insurance (if applicable) are clearly stated in your loan agreement before you sign. There are no hidden charges."
+                    },
+                    {
+                        question: "Do you charge processing fees?",
+                        answer: "Yes, we charge a small processing fee (typically 1-2% of the loan amount) to cover application review, verification, and disbursement costs. This will be deducted from your loan amount or added to your first payment."
+                    },
+                    {
+                        question: "Can I pay off my loan early without penalty?",
+                        answer: "Yes, you can repay your loan at any time without early repayment penalties. We encourage early repayment as it saves you on interest charges. Simply contact our customer service to arrange early settlement."
+                    }
+                ]
+            },
+            {
+                category: "Loan Disbursement & Repayment",
+                items: [
+                    {
+                        question: "How will I receive the loan money?",
+                        answer: "Once approved, the loan amount is disbursed directly to your bank account within 24-48 hours. You can use the funds for any purpose. Disbursement is automatic once all documents are verified."
+                    },
+                    {
+                        question: "How do I make loan repayments?",
+                        answer: "<strong>Multiple repayment options:</strong><ul><li>Bank transfer to our designated account</li><li>Mobile money (M-Pesa)</li><li>Standing order (automatic deduction)</li><li>Over-the-counter at partner banks</li></ul>We'll provide complete payment instructions with your loan agreement."
+                    },
+                    {
+                        question: "What happens if I miss a payment?",
+                        answer: "Late payments attract a penalty fee. We recommend setting up a standing order to avoid missed payments. If you face difficulty making a payment, contact us immediately to discuss options such as payment restructuring or grace periods."
+                    },
+                    {
+                        question: "Can I adjust my payment schedule?",
+                        answer: "Yes, you can request to adjust your payment schedule or term. This may involve refinancing or restructuring your loan. Contact our customer service team to discuss your options."
+                    }
+                ]
+            },
+            {
+                category: "Security & Privacy",
+                items: [
+                    {
+                        question: "How is my personal data protected?",
+                        answer: "We use 256-bit encryption and industry-standard security protocols to protect all your data. Your information is stored on secure servers and only authorized staff can access it. We comply with Kenya's data protection laws."
+                    },
+                    {
+                        question: "Will you share my information with third parties?",
+                        answer: "No, we do not sell or share your information with third parties without your consent. We only share information when required by law or with trusted service providers (banks, insurers) necessary for loan processing."
+                    },
+                    {
+                        question: "How do you handle credit information?",
+                        answer: "Your credit information is shared with credit reference bureaus to verify your creditworthiness. This helps us assess risk and offer appropriate terms. Your credit profile is not negatively affected by a loan inquiry."
+                    },
+                    {
+                        question: "What privacy rights do I have?",
+                        answer: "You have the right to access your data, correct inaccuracies, and request deletion of non-essential information. Read our full privacy policy for complete details on your privacy rights."
+                    }
+                ]
+            },
+            {
+                category: "Troubleshooting & Support",
+                items: [
+                    {
+                        question: "My application was rejected. What can I do?",
+                        answer: "If your application is rejected, you will receive a detailed explanation via email. Common reasons include insufficient income, poor credit history, or missing documentation. You can reapply after addressing the issues or contact us for guidance."
+                    },
+                    {
+                        question: "I forgot my login credentials. How do I reset them?",
+                        answer: "Click 'Forgot Password' on the login page and enter your email address. You'll receive a password reset link. If you're still having issues, contact our support team at support@imanicredit.com."
+                    },
+                    {
+                        question: "How do I update my information?",
+                        answer: "You can update some information (phone, email) through your dashboard. For other details, contact our customer service team. Employment and income changes should be reported immediately as they affect your loan status."
+                    },
+                    {
+                        question: "How do I contact customer support?",
+                        answer: "<strong>Reach us through:</strong><ul><li>Email: support@imanicredit.com</li><li>Phone: +254 7XX XXX XXX</li><li>Live chat on our website (9 AM - 5 PM EAT)</li><li>In-app messaging</li></ul>Average response time is within 2 hours."
+                    }
+                ]
+            }
+        ];
+
+        // DOM Elements
+        const faqContainer = document.getElementById('faqContainer');
+        const searchInput = document.getElementById('searchInput');
+
+        // Initialize FAQ
+        function initializeFAQ() {
+            renderFAQ(faqData);
+            setupEventListeners();
+        }
+
+        // Render FAQ
+        function renderFAQ(data) {
+            faqContainer.innerHTML = data.map((category, catIndex) => `
+                <div class="faq-category">
+                    <div class="category-title" data-category="${catIndex}">
+                        <span>${category.category}</span>
+                        <span class="category-toggle">▼</span>
+                    </div>
+                    <div class="faq-items">
+                        ${category.items.map((item, itemIndex) => `
+                            <div class="faq-item">
+                                <div class="faq-question" data-category="${catIndex}" data-item="${itemIndex}">
+                                    <span>${item.question}</span>
+                                    <span class="faq-icon">▼</span>
+                                </div>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-text">${item.answer}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Category titles
+            document.querySelectorAll('.category-title').forEach(title => {
+                title.addEventListener('click', function() {
+                    const categoryIndex = this.dataset.category;
+                    const faqItems = this.nextElementSibling;
+                    
+                    this.classList.toggle('active');
+                    faqItems.classList.toggle('active');
+                });
+            });
+
+            // FAQ Questions
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    
+                    // Close other answers in same category
+                    const categoryIndex = this.dataset.category;
+                    document.querySelectorAll(`.faq-question[data-category="${categoryIndex}"]`).forEach(q => {
+                        if (q !== this) {
+                            q.classList.remove('active');
+                            q.nextElementSibling.classList.remove('active');
+                        }
+                    });
+                    
+                    this.classList.toggle('active');
+                    answer.classList.toggle('active');
+                });
+            });
+        }
+
+        // Search Functionality
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                renderFAQ(faqData);
+                setupEventListeners();
+                return;
+            }
+
+            // Filter FAQ data
+            const filteredData = faqData.map(category => ({
+                category: category.category,
+                items: category.items.filter(item => 
+                    item.question.toLowerCase().includes(searchTerm) ||
+                    item.answer.toLowerCase().includes(searchTerm)
+                )
+            })).filter(category => category.items.length > 0);
+
+            if (filteredData.length === 0) {
+                faqContainer.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">🔍</div>
+                        <h3>No results found</h3>
+                        <p>We couldn't find any FAQs matching "${searchTerm}". Try different keywords or contact our support team.</p>
+                    </div>
+                `;
+            } else {
+                renderFAQ(filteredData);
+                setupEventListeners();
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializeFAQ);
+    </script>
+</body>
+</html>

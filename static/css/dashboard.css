@@ -83,7 +83,6 @@
 
         /* ===== MAIN CONTAINER ===== */
         .main-container {
-            display: flex;
             flex: 1;
             gap: 0;
         }
@@ -444,6 +443,7 @@
             justify-content: space-between;
             align-items: center;
             gap: 12px;
+            padding: 24px;
             padding-top: 24px;
             border-top: 1px solid var(--border);
         }

@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - ImaniCredit</title>
+    <style>
+        :root {
+            --primary-color: #1b6b3f;
+            --accent-color: #d4a500;
+            --light-bg: #f9f7f4;
+            --text-primary: #2d3436;
+            --text-secondary: #636e72;
+            --error-color: #dc2626;
+            --success-color: #16a34a;
+            --border-color: #dfe6e9;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #0f4c2f 100%);
+            padding: 0 40px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(27, 107, 63, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .navbar-logo span {
+            color: var(--accent-color);
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .navbar-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .navbar-links a.active {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 5px;
+        }
+
+        .sign-in-btn {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .sign-in-btn:hover {
+            background-color: #c69300;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #0f4c2f 100%);
+            color: white;
+            padding: 80px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin: 0 0 20px 0;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin: 0;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 40px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+        }
+
+        /* Contact Form Section */
+        .contact-form-section h2 {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(27, 107, 63, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-group.error input,
+        .form-group.error textarea {
+            border-color: var(--error-color);
+            background-color: #fef2f2;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #0f4c2f 100%);
+            color: white;
+            padding: 14px 40px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(27, 107, 63, 0.2);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .success-message {
+            background-color: #f0fdf4;
+            border: 2px solid var(--success-color);
+            color: var(--success-color);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Contact Info Section */
+        .contact-info-section h2 {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 40px;
+        }
+
+        .contact-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(27, 107, 63, 0.15);
+        }
+
+        .contact-card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #0f4c2f 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .contact-card h3 {
+            color: var(--primary-color);
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+
+        .contact-card p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .contact-card a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .contact-card a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Office Hours */
+        .office-hours {
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+        }
+
+        .office-hours h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .hours-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .hours-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .hours-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Map Section */
+        .map-section {
+            background: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .map-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            font-size: 32px;
+        }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Social Links */
+        .social-section {
+            background: var(--primary-color);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .social-section h2 {
+            margin-top: 0;
+            margin-bottom: 40px;
+            font-size: 32px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            transition: all 0.3s;
+            border: 2px solid white;
+        }
+
+        .social-link:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .navbar-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 60px 20px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .container {
+                padding: 50px 20px;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .map-container {
+                height: 300px;
+            }
+
+            .social-links {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="index.html" class="navbar-logo">
+            Imani<span>Credit</span>
+        </a>
+        <ul class="navbar-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="faq.html">FAQs</a></li>
+            <li><a href="contact.html" class="active">Contact</a></li>
+        </ul>
+        <button class="sign-in-btn">Sign In</button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Get in Touch</h1>
+        <p>We're here to help! Reach out to us with any questions about our loan services or your application.</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="contact-grid">
+            <!-- Contact Form -->
+            <div class="contact-form-section">
+                <h2>Send Us a Message</h2>
+                <div class="success-message" id="successMessage">
+                    Thank you! Your message has been sent successfully. We'll get back to you soon.
+                </div>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required>
+                        <div class="error-message">Please enter your full name</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                        <div class="error-message">Please enter a valid email address</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone">
+                        <div class="error-message">Please enter a valid phone number</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <input type="text" id="subject" name="subject" required>
+                        <div class="error-message">Please enter a subject</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" required></textarea>
+                        <div class="error-message">Please enter your message</div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="contact-info-section">
+                <h2>Contact Information</h2>
+
+                <div class="contact-card">
+                    <div class="contact-card-icon">📧</div>
+                    <h3>Email Us</h3>
+                    <p><a href="mailto:support@imanicredit.com">support@imanicredit.com</a></p>
+                    <p style="font-size: 12px; margin-top: 5px;">We respond within 24 hours</p>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-card-icon">📞</div>
+                    <h3>Call Us</h3>
+                    <p><a href="tel:+254712345678">+254 (712) 345-678</a></p>
+                    <p style="font-size: 12px; margin-top: 5px;">Monday - Friday, 9 AM - 6 PM</p>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-card-icon">📍</div>
+                    <h3>Visit Us</h3>
+                    <p>Imperial House, Nairobi<br>Kenya</p>
+                    <p style="font-size: 12px; margin-top: 5px;">Head Office</p>
+                </div>
+
+                <div class="office-hours">
+                    <h4>Office Hours</h4>
+                    <ul class="hours-list">
+                        <li>
+                            <span>Monday - Friday</span>
+                            <span>9:00 AM - 6:00 PM</span>
+                        </li>
+                        <li>
+                            <span>Saturday</span>
+                            <span>10:00 AM - 4:00 PM</span>
+                        </li>
+                        <li>
+                            <span>Sunday</span>
+                            <span>Closed</span>
+                        </li>
+                        <li>
+                            <span>Public Holidays</span>
+                            <span>Closed</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map Section -->
+    <section class="map-section">
+        <h2>Find Our Location</h2>
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.797048153066!2d36.82194!3d-1.28637!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1a4d8d8d8d8d%3A0x0!2sImperial%20House%2C%20Nairobi!5e0!3m2!1sen!2ske!4v1234567890" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </section>
+
+    <!-- Social Section -->
+    <section class="social-section">
+        <h2>Follow Us</h2>
+        <div class="social-links">
+            <a href="https://facebook.com/imanicredit" class="social-link" title="Facebook">f</a>
+            <a href="https://twitter.com/imanicredit" class="social-link" title="Twitter">𝕏</a>
+            <a href="https://instagram.com/imanicredit" class="social-link" title="Instagram">📷</a>
+            <a href="https://linkedin.com/company/imanicredit" class="social-link" title="LinkedIn">in</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 ImaniCredit. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
+
+    <script>
+        // Form Validation
+        const contactForm = document.getElementById('contactForm');
+        const successMessage = document.getElementById('successMessage');
+
+        function validateEmail(email) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailPattern.test(email);
+        }
+
+        function validatePhone(phone) {
+            if (!phone) return true; // Phone is optional
+            const phonePattern = /^[\d\s\-\+\(\)]{10,}$/;
+            return phonePattern.test(phone);
+        }
+
+        function validateForm() {
+            let isValid = true;
+            const formGroups = contactForm.querySelectorAll('.form-group');
+
+            formGroups.forEach(group => {
+                group.classList.remove('error');
+                const input = group.querySelector('input, textarea');
+                const fieldName = input.name;
+
+                if (fieldName === 'name' && !input.value.trim()) {
+                    group.classList.add('error');
+                    isValid = false;
+                }
+
+                if (fieldName === 'email') {
+                    if (!input.value.trim() || !validateEmail(input.value)) {
+                        group.classList.add('error');
+                        isValid = false;
+                    }
+                }
+
+                if (fieldName === 'phone' && !validatePhone(input.value)) {
+                    group.classList.add('error');
+                    isValid = false;
+                }
+
+                if (fieldName === 'subject' && !input.value.trim()) {
+                    group.classList.add('error');
+                    isValid = false;
+                }
+
+                if (fieldName === 'message' && !input.value.trim()) {
+                    group.classList.add('error');
+                    isValid = false;
+                }
+            });
+
+            return isValid;
+        }
+
+        contactForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            if (validateForm()) {
+                // Simulate form submission
+                console.log('[v0] Form submitted:', {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    subject: document.getElementById('subject').value,
+                    message: document.getElementById('message').value
+                });
+
+                // Show success message
+                successMessage.classList.add('show');
+
+                // Reset form
+                contactForm.reset();
+
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 5000);
+            }
+        });
+
+        // Real-time validation
+        contactForm.querySelectorAll('input, textarea').forEach(field => {
+            field.addEventListener('blur', function () {
+                const group = this.parentElement;
+                group.classList.remove('error');
+
+                if (this.name === 'name' && !this.value.trim()) {
+                    group.classList.add('error');
+                }
+
+                if (this.name === 'email') {
+                    if (!this.value.trim() || !validateEmail(this.value)) {
+                        group.classList.add('error');
+                    }
+                }
+
+                if (this.name === 'phone' && this.value && !validatePhone(this.value)) {
+                    group.classList.add('error');
+                }
+
+                if (this.name === 'subject' && !this.value.trim()) {
+                    group.classList.add('error');
+                }
+
+                if (this.name === 'message' && !this.value.trim()) {
+                    group.classList.add('error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

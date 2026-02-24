@@ -5,7 +5,7 @@ load_dotenv()
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "simplesecretkey123")
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "mysql+pymysql://root:Mr.l0n3wolf1.@localhost/imanicredit")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "mysql+pymysql://root:1234@localhost/imanicredit")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 # Flask secret key (needed for forms and sessions)
    ## SECRET_KEY = os.environ.get('SECRET_KEY') or 'simplesecretkey123'

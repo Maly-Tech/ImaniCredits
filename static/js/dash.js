@@ -55,7 +55,7 @@ if (loanSlider && loanAmount) {
 // Kenya phone validation
 function validateKenyaPhoneNumber(phone) {
     const cleaned = phone.replace(/[\s\-()]/g, '');
-    const kenyaPhonePattern = /^(?:\+254|0)(?:7[0-9]|1[0-1])[0-9]{6}$/;
+    const kenyaPhonePattern = /^(?:\+254|0)(?:7\d|1[01])\d{7}$/;
     return kenyaPhonePattern.test(cleaned);
 }
 

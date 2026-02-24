@@ -179,7 +179,16 @@ def logout():
 def dashboard():
     return render_template('landing.html')
 
-# Loan application route
+@app.route('/faq')
+def faq():
+    return render_template('FAQs.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')  
+@app.route('/about')
+def about():
+    return render_template('about.html')   
 
 @app.route('/apply-loan', methods=['GET', 'POST'])
 @login_required
