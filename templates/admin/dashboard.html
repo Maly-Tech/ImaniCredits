@@ -20,6 +20,7 @@
                 <li><a href="#">Users</a></li>
                 <li><a href="#">Settings</a></li>
             </ul>
+            <span class="welcome-text">Hi, {{ session['firstname'] }}</span>
             <a href="/logout" class="btn-nav">Logout</a>
         </nav>
 
@@ -33,19 +34,19 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-label">Total Applications</div>
-                    <div class="stat-value" id="totalApps">0</div>
+                    <div class="stat-value" id="totalApps">{{stats.total}}</div>
                 </div>
                 <div class="stat-card pending">
                     <div class="stat-label">Pending Review</div>
-                    <div class="stat-value" id="pendingApps">0</div>
+                    <div class="stat-value" id="pendingApps">{{stats.pending}}</div>
                 </div>
                 <div class="stat-card approved">
                     <div class="stat-label">Approved</div>
-                    <div class="stat-value" id="approvedApps">0</div>
+                    <div class="stat-value" id="approvedApps">{{stats.approved}}</div>
                 </div>
                 <div class="stat-card rejected">
                     <div class="stat-label">Rejected</div>
-                    <div class="stat-value" id="rejectedApps">0</div>
+                    <div class="stat-value" id="rejectedApps">{{stats.rejected}}</div>
                 </div>
             </div>
 
@@ -96,6 +97,21 @@
                             </tr>
                         </thead>
                         <tbody id="applicationsTable">
+                            {% if applications %}
+                                {% for item in applications %}
+                                    {% set app = item.application %}
+                                    {% set risk = item.risk_details %}
+                                    <tr>
+                                        <td>{{ app.user.firstname }} {{ app.user.lastname }}</td>
+                                        <td>{{ app.user.email }}</td>
+                                        <td>${{ "{:,.2f}".format(app.loan_amount) }}</td>
+                                        <td>{{ app.loan_purpose }}</td>
+                                        <td><span class="status {{ app.status|lower }}">{{ app.status }}</span></td>
+                                        <td>{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                                        <td><button class="btn-action" onclick="viewDetails({{ app.id }})">View Details</button></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
                             <tr>
                                 <td colspan="7" style="text-align: center; padding: 40px;">
                                     <div class="empty-state">
@@ -104,6 +120,7 @@
                                     </div>
                                 </td>
                             </tr>
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>
@@ -128,6 +145,6 @@
             </div>
         </div>
     </div>
-    <script src="/static/js/admin.js"></script>
+    <script src="/static/js/admins.js"></script>
 </body>
 </html>
